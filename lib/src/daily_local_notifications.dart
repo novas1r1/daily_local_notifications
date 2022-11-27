@@ -1,8 +1,8 @@
 import 'package:daily_local_notifications/src/providers/reminder_settings.dart';
 import 'package:daily_local_notifications/src/repositories/reminder_repository.dart';
 import 'package:daily_local_notifications/src/repositories/shared_prefs_repository.dart';
-import 'package:daily_local_notifications/src/services/notification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +28,9 @@ class DailyLocalNotification extends StatefulWidget {
   /// Defaults to [Colors.grey]
   final Color dayInactiveColor;
 
+  final TextStyle timeNormalTextStyle;
+  final TextStyle timeSelectedTextStyle;
+
   /// Constructor for [DailyLocalNotification]
   const DailyLocalNotification({
     super.key,
@@ -36,6 +39,8 @@ class DailyLocalNotification extends StatefulWidget {
     required this.reminderDailyText,
     required this.dayActiveColor,
     required this.dayInactiveColor,
+    required this.timeNormalTextStyle,
+    required this.timeSelectedTextStyle,
   });
 
   @override
@@ -54,7 +59,7 @@ class _DailyLocalNotificationState extends State<DailyLocalNotification> {
   /// Creates a [DailyLocalNotification] widget.
   Future<ReminderSettingsProvider> init() async {
     final reminderRepository = ReminderRepository(
-      notificationService: NotificationService(),
+      flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin(),
     );
 
     final sharedPrefs = await SharedPreferences.getInstance();
@@ -86,6 +91,8 @@ class _DailyLocalNotificationState extends State<DailyLocalNotification> {
               reminderDailyText: widget.reminderDailyText,
               dayActiveColor: widget.dayActiveColor,
               dayInactiveColor: widget.dayInactiveColor,
+              timeNormalTextStyle: widget.timeNormalTextStyle,
+              timeSelectedTextStyle: widget.timeSelectedTextStyle,
             ),
           );
         } else {
@@ -116,6 +123,9 @@ class _DailyLocalNotificationWidget extends StatelessWidget {
   /// Defaults to [Colors.grey]
   final Color dayInactiveColor;
 
+  final TextStyle timeNormalTextStyle;
+  final TextStyle timeSelectedTextStyle;
+
   /// Constructor for the [_DailyLocalNotificationWidget]
   const _DailyLocalNotificationWidget({
     required this.reminderTitleText,
@@ -123,48 +133,56 @@ class _DailyLocalNotificationWidget extends StatelessWidget {
     required this.reminderDailyText,
     required this.dayActiveColor,
     required this.dayInactiveColor,
+    required this.timeNormalTextStyle,
+    required this.timeSelectedTextStyle,
   });
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ReminderSettingsProvider>(
       builder: (context, provider, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  value: provider.isReminderEnabled,
-                  title: reminderTitleText,
-                  onChanged: (bool isEnabled) =>
-                      provider.updateReminderEnabled(isEnabled),
-                ),
-                if (provider.isReminderEnabled)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _DailyToggleButtons(
-                        reminderRepeatText: reminderRepeatText,
-                        reminderDailyText: reminderDailyText,
-                        dayActiveColor: dayActiveColor,
-                        dayInactiveColor: dayInactiveColor,
-                      ),
-                      const TimePicker(
-                        is24HourMode: true,
-                        is2D: true,
-                      ),
-                      ElevatedButton(
-                        onPressed: () => provider.scheduleNotifications(),
-                        child: const Text('Save'),
-                      ),
-                    ],
+        return Container(
+          color: Theme.of(context).backgroundColor,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    value: provider.isReminderEnabled,
+                    title: reminderTitleText,
+                    onChanged: (bool isEnabled) =>
+                        provider.updateReminderEnabled(isEnabled),
                   ),
-              ],
-            ),
-          ],
+                  if (provider.isReminderEnabled)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _DailyToggleButtons(
+                          reminderRepeatText: reminderRepeatText,
+                          reminderDailyText: reminderDailyText,
+                          dayActiveColor: dayActiveColor,
+                          dayInactiveColor: dayInactiveColor,
+                        ),
+                        TimePicker(
+                          is24HourMode: true,
+                          is2D: true,
+                          normalTextStyle: timeNormalTextStyle,
+                          selectedTextStyle: timeSelectedTextStyle,
+                        ),
+                        ElevatedButton(
+                          onPressed: () => provider.scheduleNotifications(),
+                          child: const Text('Save'),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );
@@ -178,8 +196,8 @@ class _DailyToggleButtons extends StatefulWidget {
   final Color dayInactiveColor;
 
   const _DailyToggleButtons({
-    this.reminderRepeatText = const Text('Repeat'),
-    this.reminderDailyText = const Text('Daily'),
+    required this.reminderRepeatText,
+    required this.reminderDailyText,
     required this.dayActiveColor,
     required this.dayInactiveColor,
   });
@@ -204,6 +222,8 @@ class _DailyToggleButtonsState extends State<_DailyToggleButtons> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
+                  activeColor: widget.dayActiveColor,
+                  checkColor: Colors.white,
                   value: provider.isDailyReminderEnabled,
                   onChanged: (isDaily) =>
                       provider.updateDailyReminderEnabled(isDaily ?? false),
@@ -256,17 +276,11 @@ class TimePicker extends StatelessWidget {
   final bool is2D;
 
   const TimePicker({
+    super.key,
     required this.is24HourMode,
     required this.is2D,
-    this.normalTextStyle = const TextStyle(
-      fontSize: 24,
-      color: Colors.grey,
-    ),
-    this.selectedTextStyle = const TextStyle(
-      fontSize: 24,
-      fontWeight: FontWeight.bold,
-      color: Colors.blue,
-    ),
+    required this.normalTextStyle,
+    required this.selectedTextStyle,
   });
 
   @override

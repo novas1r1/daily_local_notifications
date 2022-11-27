@@ -18,7 +18,9 @@ class ReminderSettingsProvider extends ChangeNotifier {
   });
 
   /// Initially sets reminder settings saved in sharedPrefs
-  void init() {
+  Future<void> init() async {
+    await reminderRepository.init();
+
     reminderTime = sharedPrefsRepository.getReminderTime();
     isReminderEnabled = sharedPrefsRepository.isReminderEnabled();
     reminderDays = sharedPrefsRepository.getReminderDays();
@@ -92,7 +94,8 @@ class ReminderSettingsProvider extends ChangeNotifier {
     await sharedPrefsRepository.setReminderTime(reminderTime);
     await sharedPrefsRepository.setReminderEnabled(isReminderEnabled);
 
-    // TODO schedule notifications
+    // await reminderRepository.scheduleWeeklyMondayTenAMNotification();
+    await reminderRepository.scheduleDailyTenAMNotification();
   }
 
   Future<void> clearReminder() async {
