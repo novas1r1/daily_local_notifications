@@ -152,7 +152,10 @@ class _DailyLocalNotificationWidget extends StatelessWidget {
                         dayActiveColor: dayActiveColor,
                         dayInactiveColor: dayInactiveColor,
                       ),
-                      const _TimePicker(),
+                      const TimePicker(
+                        is24HourMode: true,
+                        is2D: true,
+                      ),
                       ElevatedButton(
                         onPressed: () => provider.scheduleNotifications(),
                         child: const Text('Save'),
@@ -246,33 +249,46 @@ class _DailyToggleButtonsState extends State<_DailyToggleButtons> {
   }
 }
 
-class _TimePicker extends StatelessWidget {
-  const _TimePicker();
+class TimePicker extends StatelessWidget {
+  final bool is24HourMode;
+  final TextStyle? normalTextStyle;
+  final TextStyle? selectedTextStyle;
+  final bool is2D;
+
+  const TimePicker({
+    required this.is24HourMode,
+    required this.is2D,
+    this.normalTextStyle = const TextStyle(
+      fontSize: 24,
+      color: Colors.grey,
+    ),
+    this.selectedTextStyle = const TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      color: Colors.blue,
+    ),
+  });
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+
     return Consumer<ReminderSettingsProvider>(
       builder: (context, provider, child) {
         return TimePickerSpinner(
-          is24HourMode: false,
+          is24HourMode: is24HourMode,
           time: DateTime(
-            2000,
-            1,
-            1,
+            now.year,
+            now.month,
+            now.day,
             provider.reminderTime.hour,
             provider.reminderTime.minute,
           ),
-          normalTextStyle: const TextStyle(
-            fontSize: 24,
-            color: Colors.grey,
-          ),
-          highlightedTextStyle: const TextStyle(
-            fontSize: 24,
-            color: Colors.orange,
-          ),
+          normalTextStyle: normalTextStyle,
+          highlightedTextStyle: selectedTextStyle,
           spacing: 24,
           itemHeight: 60,
-          isForce2Digits: true,
+          isForce2Digits: is2D,
           onTimeChange: (time) => provider.updateReminderTime(time),
         );
       },
