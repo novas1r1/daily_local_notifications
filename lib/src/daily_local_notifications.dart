@@ -1,4 +1,4 @@
-import 'package:daily_local_notifications/src/providers/reminder_settings.dart';
+import 'package:daily_local_notifications/src/providers/reminder_settings_provider.dart';
 import 'package:daily_local_notifications/src/repositories/reminder_repository.dart';
 import 'package:daily_local_notifications/src/repositories/shared_prefs_repository.dart';
 import 'package:flutter/material.dart';
@@ -67,10 +67,14 @@ class _DailyLocalNotificationState extends State<DailyLocalNotification> {
       sharedPrefs: sharedPrefs,
     );
 
-    return ReminderSettingsProvider(
+    final reminderSettingsProvider = ReminderSettingsProvider(
       reminderRepository: reminderRepository,
       sharedPrefsRepository: sharedPrefsRepository,
-    )..init();
+    );
+
+    await reminderSettingsProvider.init();
+
+    return reminderSettingsProvider;
   }
 
   @override

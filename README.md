@@ -1,10 +1,14 @@
-# Daily Local Notifications
+# Daily Local Notifications - WIP!
 
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 
 A widget which can be easily included in your app to add daily local notifications.
-Uses flutter_local_notifications package under the hood.
+Uses [flutter_local_notifications][flutter_local_notifications_link] package under the hood.
+
+## Current State
+<!-- ![Screenshot](screenshot.png =250px) -->
+<img src="screenshot.png" alt="goal" width="200"/>
 
 ## Installation 💻
 
@@ -21,6 +25,25 @@ Install it:
 
 ```sh
 flutter packages get
+```
+
+---
+## Example
+```dart
+DailyLocalNotification(
+  reminderTitleText: Text('Reminder Title'),
+  reminderRepeatText: Text('Repeat'),
+  reminderDailyText: Text('Daily'),
+  dayActiveColor: Colors.deepPurple,
+  dayInactiveColor: Colors.deepPurple.withOpacity(0.3),
+  timeNormalTextStyle:
+      const TextStyle(fontSize: 24, color: Colors.grey),
+  timeSelectedTextStyle: TextStyle(
+    fontSize: 24,
+    color: Colors.deepPurple,
+    fontWeight: FontWeight.bold,
+  ),
+),
 ```
 
 ---
@@ -49,6 +72,7 @@ genhtml coverage/lcov.info -o coverage/
 open coverage/index.html
 ```
 
+[flutter_local_notifications_link]: https://pub.dev/packages/flutter_local_notifications
 [flutter_install_link]: https://docs.flutter.dev/get-started/install
 [github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
