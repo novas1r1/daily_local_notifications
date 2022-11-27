@@ -69,4 +69,49 @@ class WeekDay {
         shortName.hashCode ^
         isActive.hashCode;
   }
+
+  static List<WeekDay> get initialWeekDays => const [
+        WeekDay(
+          name: 'Monday',
+          shortName: 'Mon',
+          isActive: false,
+          firstLetter: 'M',
+        ),
+        WeekDay(
+          name: 'Tuesday',
+          shortName: 'Tue',
+          isActive: false,
+          firstLetter: 'T',
+        ),
+        WeekDay(
+          name: 'Wednesday',
+          shortName: 'Wed',
+          isActive: false,
+          firstLetter: 'W',
+        ),
+        WeekDay(
+          name: 'Thursday',
+          shortName: 'Thu',
+          isActive: false,
+          firstLetter: 'T',
+        ),
+        WeekDay(
+          name: 'Friday',
+          shortName: 'Fri',
+          isActive: false,
+          firstLetter: 'F',
+        ),
+        WeekDay(
+          name: 'Saturday',
+          shortName: 'Sat',
+          isActive: false,
+          firstLetter: 'S',
+        ),
+        WeekDay(
+          name: 'Sunday',
+          shortName: 'Sun',
+          isActive: false,
+          firstLetter: 'S',
+        ),
+      ];
 }
