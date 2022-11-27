@@ -1,53 +1,75 @@
-import 'package:daily_local_notifications/daily_local_notifications.dart';
+import 'package:daily_local_notifications/src/models/week_day.dart';
+import 'package:daily_local_notifications/src/repositories/reminder_repository.dart';
 import 'package:daily_local_notifications/src/repositories/shared_prefs_repository.dart';
 import 'package:flutter/material.dart';
 
-class ReminderSettings {
+class ReminderSettingsProvider extends ChangeNotifier {
   final ReminderRepository reminderRepository;
   final SharedPrefsRepository sharedPrefsRepository;
 
   List<WeekDay> reminderDays = [];
   TimeOfDay reminderTime = TimeOfDay.now();
   bool isReminderEnabled = false;
+  bool isDailyReminderEnabled = true;
 
-  ReminderSettings({
+  ReminderSettingsProvider({
     required this.reminderRepository,
     required this.sharedPrefsRepository,
   });
 
-  bool get isDailyActive => reminderDays.every((element) => element.isActive);
-
-  /// Initially sets reminder time saved in sharedPrefs
+  /// Initially sets reminder settings saved in sharedPrefs
   void init() {
-    final reminderTime = sharedPrefsRepository.getReminderTime();
-    final isReminderEnabled = sharedPrefsRepository.isReminderEnabled();
-    final reminderDays = sharedPrefsRepository.getReminderDays();
+    reminderTime = sharedPrefsRepository.getReminderTime();
+    isReminderEnabled = sharedPrefsRepository.isReminderEnabled();
+    reminderDays = sharedPrefsRepository.getReminderDays();
 
-    // notifyListeners();
+    checkIfDailyReminderChecked();
+
+    notifyListeners();
   }
 
-  // TODO store current time in shared prefs
-  // TODO load initial time from shared prefs or set current time
-  // TODO setup local notifications (delete old notifications if updated)
-  // TODO 24hour format
-  Future<void> updateReminderTime(TimeOfDay selectedTime) async {
-    await sharedPrefsRepository.setReminderTime(selectedTime);
-    reminderTime = selectedTime;
+  void checkIfDailyReminderChecked() {
+    if (reminderDays.every((day) => day.isActive)) {
+      isDailyReminderEnabled = true;
+    } else {
+      isDailyReminderEnabled = false;
+    }
 
-    // notifyListeners();
+    notifyListeners();
+  }
+
+  void updateReminderTime(DateTime dateTime) {
+    reminderTime = TimeOfDay.fromDateTime(dateTime);
+    notifyListeners();
   }
 
   Future<void> updateReminderEnabled(bool isEnabled) async {
-    await sharedPrefsRepository.setReminderEnabled(
-      isEnabled: isEnabled,
-    );
-
     isReminderEnabled = isEnabled;
 
-    // notifyListeners();
+    if (!isEnabled) {
+      await clearReminder();
+    }
+
+    notifyListeners();
   }
 
-  Future<void> toggleDay(WeekDay day) async {
+  void updateDailyReminderEnabled(bool isEnabled) {
+    isDailyReminderEnabled = isEnabled;
+
+    if (isEnabled) {
+      // set all days to active
+      reminderDays =
+          reminderDays.map((day) => day.copyWith(isActive: true)).toList();
+    } else {
+      // set all days to inactive
+      reminderDays =
+          reminderDays.map((day) => day.copyWith(isActive: false)).toList();
+    }
+
+    notifyListeners();
+  }
+
+  void toggleDay(WeekDay day) {
     final updatedReminderDays = reminderDays.toList();
     final index = updatedReminderDays.indexWhere(
       (element) => element.shortName == day.shortName,
@@ -57,23 +79,30 @@ class ReminderSettings {
       isActive: !updatedReminderDays[index].isActive,
     );
 
-    await sharedPrefsRepository.setReminderDays(updatedReminderDays);
-
     reminderDays = updatedReminderDays;
+    checkIfDailyReminderChecked();
 
-    // notifyListeners();
+    notifyListeners();
   }
 
-  Future<void> toggleAllDays({required bool isActive}) async {
-    final updatedReminderDays = reminderDays
-        .toList()
-        .map((e) => e.copyWith(isActive: isActive))
-        .toList();
+  Future<void> scheduleNotifications() async {
+    print('Scheduling notifications..., isReminderEnabled: $isReminderEnabled, '
+        'reminderDays: $reminderDays, reminderTime: $reminderTime');
+    await sharedPrefsRepository.setReminderDays(reminderDays);
+    await sharedPrefsRepository.setReminderTime(reminderTime);
+    await sharedPrefsRepository.setReminderEnabled(isReminderEnabled);
 
-    await sharedPrefsRepository.setReminderDays(updatedReminderDays);
+    // TODO schedule notifications
+  }
 
-    reminderDays = updatedReminderDays;
+  Future<void> clearReminder() async {
+    // TODO remove all notifications
 
-    // notifyListeners();
+    reminderDays = WeekDay.initialWeekDays;
+    isReminderEnabled = false;
+    checkIfDailyReminderChecked();
+
+    await sharedPrefsRepository.setReminderDays(WeekDay.initialWeekDays);
+    await sharedPrefsRepository.setReminderEnabled(false);
   }
 }

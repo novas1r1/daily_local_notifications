@@ -13,7 +13,7 @@ dependencies:
   flutter_local_notifications: ^12.0.4
   flutter_time_picker_spinner:
     git: https://github.com/novas1r1/flutter_time_picker_spinner.git
-
+  provider: ^6.0.4
   shared_preferences: ^2.0.15
 
 dev_dependencies:

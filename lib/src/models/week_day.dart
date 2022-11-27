@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
+@immutable
 class WeekDay {
   final String firstLetter;
   final String name;
@@ -74,43 +77,43 @@ class WeekDay {
         WeekDay(
           name: 'Monday',
           shortName: 'Mon',
-          isActive: false,
+          isActive: true,
           firstLetter: 'M',
         ),
         WeekDay(
           name: 'Tuesday',
           shortName: 'Tue',
-          isActive: false,
+          isActive: true,
           firstLetter: 'T',
         ),
         WeekDay(
           name: 'Wednesday',
           shortName: 'Wed',
-          isActive: false,
+          isActive: true,
           firstLetter: 'W',
         ),
         WeekDay(
           name: 'Thursday',
           shortName: 'Thu',
-          isActive: false,
+          isActive: true,
           firstLetter: 'T',
         ),
         WeekDay(
           name: 'Friday',
           shortName: 'Fri',
-          isActive: false,
+          isActive: true,
           firstLetter: 'F',
         ),
         WeekDay(
           name: 'Saturday',
           shortName: 'Sat',
-          isActive: false,
+          isActive: true,
           firstLetter: 'S',
         ),
         WeekDay(
           name: 'Sunday',
           shortName: 'Sun',
-          isActive: false,
+          isActive: true,
           firstLetter: 'S',
         ),
       ];

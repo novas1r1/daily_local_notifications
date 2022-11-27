@@ -11,9 +11,9 @@ const SP_REMINDER_WEEK_DAYS = 'reminder_week_days';
 class SharedPrefsRepository {
   final SharedPreferences sharedPrefs;
 
-  SharedPrefsRepository(this.sharedPrefs);
+  SharedPrefsRepository({required this.sharedPrefs});
 
-  TimeOfDay? getReminderTime() {
+  TimeOfDay getReminderTime() {
     final reminderTimeString = sharedPrefs.getString(SP_REMINDER_TIME_key);
 
     if (reminderTimeString != null) {
@@ -38,7 +38,7 @@ class SharedPrefsRepository {
     return reminderTime ?? false;
   }
 
-  Future<void> setReminderEnabled({required bool isEnabled}) async =>
+  Future<void> setReminderEnabled(bool isEnabled) async =>
       sharedPrefs.setBool(SP_REMINDER_ENABLED_KEY, isEnabled);
 
   List<WeekDay> getReminderDays() {

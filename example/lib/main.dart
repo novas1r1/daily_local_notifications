@@ -22,7 +22,13 @@ class MyApp extends StatelessWidget {
         ),
         body: const Padding(
           padding: EdgeInsets.all(8.0),
-          child: DailyLocalNotificationWidget(),
+          child: DailyLocalNotification(
+            reminderTitleText: Text('Reminder Title'),
+            reminderRepeatText: Text('Repeat'),
+            reminderDailyText: Text('Daily'),
+            dayActiveColor: Colors.blue,
+            dayInactiveColor: Colors.grey,
+          ),
         ),
       ),
     );

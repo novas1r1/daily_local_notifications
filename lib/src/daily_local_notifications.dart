@@ -1,28 +1,281 @@
-// Copyright (c) 2022, Very Good Ventures
-// https://verygood.ventures
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT.
+import 'package:daily_local_notifications/src/providers/reminder_settings.dart';
+import 'package:daily_local_notifications/src/repositories/reminder_repository.dart';
+import 'package:daily_local_notifications/src/repositories/shared_prefs_repository.dart';
+import 'package:daily_local_notifications/src/services/notification_service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-export 'daily_local_notifications.dart';
-export 'models/week_day.dart';
-export 'repositories/reminder_repository.dart';
-export 'services/notification_service.dart';
-export 'ui/daily_local_notifications_widget.dart';
+/// Displays a row of toggle buttons for selecting days of the week.
+/// Displays a daily-checkbox-button for selecting
+/// or deselecting all days of the week.
+class DailyLocalNotification extends StatefulWidget {
+  /// Widget for displaying the "Reminder Title" text
+  final Widget reminderTitleText;
 
-/// {@template daily_local_notifications}
-/// A Very Good Project created by Very Good CLI.
-/// {@endtemplate}
-///
+  /// Widget for displaying the "Repeat" text on the left
+  final Widget reminderRepeatText;
 
-class DailyLocalNotifications {
-  /// {@macro daily_local_notifications}
-  DailyLocalNotifications();
-/* 
-  // PracticeReminderRepository
-  final notificationService = NotificationService();
-  final practiceReminderRepository = PracticeReminderRepository(
-    notificationService: notificationService,
-  ); */
+  /// Widget for displaying the "Daily" text for the toggle button on the right
+  final Widget reminderDailyText;
+
+  /// Active color for the day button
+  /// Defaults to [Colors.blue]
+  final Color dayActiveColor;
+
+  /// Inactive color for the day button
+  /// Defaults to [Colors.grey]
+  final Color dayInactiveColor;
+
+  /// Constructor for [DailyLocalNotification]
+  const DailyLocalNotification({
+    super.key,
+    required this.reminderTitleText,
+    required this.reminderRepeatText,
+    required this.reminderDailyText,
+    required this.dayActiveColor,
+    required this.dayInactiveColor,
+  });
+
+  @override
+  State<DailyLocalNotification> createState() => _DailyLocalNotificationState();
+}
+
+class _DailyLocalNotificationState extends State<DailyLocalNotification> {
+  late Future<ReminderSettingsProvider> loadDependencies;
+
+  @override
+  void initState() {
+    super.initState();
+    loadDependencies = init();
+  }
+
+  /// Creates a [DailyLocalNotification] widget.
+  Future<ReminderSettingsProvider> init() async {
+    final reminderRepository = ReminderRepository(
+      notificationService: NotificationService(),
+    );
+
+    final sharedPrefs = await SharedPreferences.getInstance();
+    final sharedPrefsRepository = SharedPrefsRepository(
+      sharedPrefs: sharedPrefs,
+    );
+
+    return ReminderSettingsProvider(
+      reminderRepository: reminderRepository,
+      sharedPrefsRepository: sharedPrefsRepository,
+    )..init();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<ReminderSettingsProvider>(
+      future: loadDependencies,
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<ReminderSettingsProvider> snapshot,
+      ) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          return ChangeNotifierProvider<ReminderSettingsProvider>.value(
+            value: snapshot.data!,
+            child: _DailyLocalNotificationWidget(
+              reminderTitleText: widget.reminderTitleText,
+              reminderRepeatText: widget.reminderRepeatText,
+              reminderDailyText: widget.reminderDailyText,
+              dayActiveColor: widget.dayActiveColor,
+              dayInactiveColor: widget.dayInactiveColor,
+            ),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+}
+
+class _DailyLocalNotificationWidget extends StatelessWidget {
+  /// Widget for displaying the "Reminder Title" text
+  final Widget reminderTitleText;
+
+  /// Widget for displaying the "Repeat" text on the left
+  final Widget reminderRepeatText;
+
+  /// Widget for displaying the "Daily" text for the toggle button on the right
+  final Widget reminderDailyText;
+
+  /// Active color for the day button
+  /// Defaults to [Colors.blue]
+  final Color dayActiveColor;
+
+  /// Inactive color for the day button
+  /// Defaults to [Colors.grey]
+  final Color dayInactiveColor;
+
+  /// Constructor for the [_DailyLocalNotificationWidget]
+  const _DailyLocalNotificationWidget({
+    required this.reminderTitleText,
+    required this.reminderRepeatText,
+    required this.reminderDailyText,
+    required this.dayActiveColor,
+    required this.dayInactiveColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ReminderSettingsProvider>(
+      builder: (context, provider, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              children: [
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: provider.isReminderEnabled,
+                  title: reminderTitleText,
+                  onChanged: (bool isEnabled) =>
+                      provider.updateReminderEnabled(isEnabled),
+                ),
+                if (provider.isReminderEnabled)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _DailyToggleButtons(
+                        reminderRepeatText: reminderRepeatText,
+                        reminderDailyText: reminderDailyText,
+                        dayActiveColor: dayActiveColor,
+                        dayInactiveColor: dayInactiveColor,
+                      ),
+                      const _TimePicker(),
+                      ElevatedButton(
+                        onPressed: () => provider.scheduleNotifications(),
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _DailyToggleButtons extends StatefulWidget {
+  final Widget reminderRepeatText;
+  final Widget reminderDailyText;
+  final Color dayActiveColor;
+  final Color dayInactiveColor;
+
+  const _DailyToggleButtons({
+    this.reminderRepeatText = const Text('Repeat'),
+    this.reminderDailyText = const Text('Daily'),
+    required this.dayActiveColor,
+    required this.dayInactiveColor,
+  });
+
+  @override
+  State<_DailyToggleButtons> createState() => _DailyToggleButtonsState();
+}
+
+class _DailyToggleButtonsState extends State<_DailyToggleButtons> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ReminderSettingsProvider>(
+      builder: (context, provider, child) {
+        return Column(
+          children: [
+            Row(
+              children: [
+                widget.reminderRepeatText,
+                const Spacer(),
+                widget.reminderDailyText,
+                Checkbox(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  value: provider.isDailyReminderEnabled,
+                  onChanged: (isDaily) =>
+                      provider.updateDailyReminderEnabled(isDaily ?? false),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(
+                  provider.reminderDays.length,
+                  (index) => Expanded(
+                    child: GestureDetector(
+                      onTap: () =>
+                          provider.toggleDay(provider.reminderDays[index]),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: provider.reminderDays[index].isActive
+                                ? widget.dayActiveColor
+                                : widget.dayInactiveColor,
+                          ),
+                          height: 45,
+                          width: 45,
+                          child: Center(
+                            child:
+                                Text(provider.reminderDays[index].firstLetter),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _TimePicker extends StatelessWidget {
+  const _TimePicker();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ReminderSettingsProvider>(
+      builder: (context, provider, child) {
+        return TimePickerSpinner(
+          is24HourMode: false,
+          time: DateTime(
+            2000,
+            1,
+            1,
+            provider.reminderTime.hour,
+            provider.reminderTime.minute,
+          ),
+          normalTextStyle: const TextStyle(
+            fontSize: 24,
+            color: Colors.grey,
+          ),
+          highlightedTextStyle: const TextStyle(
+            fontSize: 24,
+            color: Colors.orange,
+          ),
+          spacing: 24,
+          itemHeight: 60,
+          isForce2Digits: true,
+          onTimeChange: (time) => provider.updateReminderTime(time),
+        );
+      },
+    );
+  }
 }
