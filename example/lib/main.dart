@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
               title: const Text('Daily Local Notifications'),
             ),
             body: DailyLocalNotifications(
+              notificationConfig: const NotificationConfig(),
               config: DailyLocalNotificationsConfig(
                 weekDayTranslations: [
                   'Montag',

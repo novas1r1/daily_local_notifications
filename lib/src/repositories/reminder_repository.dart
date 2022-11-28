@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:daily_local_notifications/src/models/week_day.dart';
+import 'package:daily_local_notifications/src/utils/notification_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -17,9 +18,11 @@ const String portName = 'notification_send_port';
 /// TODO: how to trigger new notifications
 class ReminderRepository {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  final NotificationConfig notificationConfig;
 
   const ReminderRepository({
     required this.flutterLocalNotificationsPlugin,
+    required this.notificationConfig,
   });
 
   /// Initialize the flutter_local_notification plugin
@@ -28,8 +31,8 @@ class ReminderRepository {
 
     // app_icon needs to be a added as a drawable resource
     // to the Android head project
-    const initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+    final initializationSettingsAndroid =
+        AndroidInitializationSettings(notificationConfig.iconName);
 
     /// The DarwinInitializationSettings class provides default settings on how the notification be presented when it is triggered and the application is in the foreground on iOS/macOS. There are optional named parameters that can be modified to suit your application's purposes. Here, it is omitted and the default values for these named properties is set such that all presentation options (alert, sound, badge) are enabled.
     final initializationSettingsDarwin = DarwinInitializationSettings(
@@ -70,16 +73,17 @@ class ReminderRepository {
       log('NOTIFICATIONS::scheduleNotifications for: $timeOfDay, $activeDays');
 
       for (final activeDay in activeDays) {
+        // TODO check if id needs to be unique
         await flutterLocalNotificationsPlugin.zonedSchedule(
           activeDay,
-          'daily scheduled notification $activeDay',
-          'daily scheduled notification $timeOfDay',
+          '${notificationConfig.title} $activeDay',
+          '${notificationConfig.description} $timeOfDay',
           _nextInstanceOfDay(timeOfDay, activeDay),
-          const NotificationDetails(
+          NotificationDetails(
             android: AndroidNotificationDetails(
-              'daily notification channel id',
-              'daily notification channel name',
-              channelDescription: 'daily notification description',
+              notificationConfig.channelId,
+              notificationConfig.channelName,
+              channelDescription: notificationConfig.channelDescription,
             ),
           ),
           androidAllowWhileIdle: true,

@@ -3,6 +3,7 @@ import 'package:daily_local_notifications/src/repositories/reminder_repository.d
 import 'package:daily_local_notifications/src/repositories/shared_prefs_repository.dart';
 import 'package:daily_local_notifications/src/ui/ui.dart';
 import 'package:daily_local_notifications/src/utils/daily_local_notifications_config.dart';
+import 'package:daily_local_notifications/src/utils/notification_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// or deselecting all days of the week.
 class DailyLocalNotifications extends StatefulWidget {
   final DailyLocalNotificationsConfig config;
+  final NotificationConfig notificationConfig;
 
   /// Widget for displaying the "Reminder Title" text
   final Widget reminderTitleText;
@@ -38,6 +40,7 @@ class DailyLocalNotifications extends StatefulWidget {
   const DailyLocalNotifications({
     super.key,
     required this.config,
+    required this.notificationConfig,
     required this.reminderTitleText,
     required this.reminderRepeatText,
     required this.reminderDailyText,
@@ -65,6 +68,7 @@ class _DailyLocalNotificationsState extends State<DailyLocalNotifications> {
   Future<ReminderSettingsProvider> init() async {
     final reminderRepository = ReminderRepository(
       flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin(),
+      notificationConfig: widget.notificationConfig,
     );
 
     final sharedPrefs = await SharedPreferences.getInstance();
