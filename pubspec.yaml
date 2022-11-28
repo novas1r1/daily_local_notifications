@@ -16,6 +16,7 @@ dependencies:
   flutter_timezone: ^1.0.4
   provider: ^6.0.4
   shared_preferences: ^2.0.15
+  timezone: ^0.9.0
 
 dev_dependencies:
   flutter_test:
