@@ -2,6 +2,7 @@ import 'package:daily_local_notifications/src/providers/reminder_settings_provid
 import 'package:daily_local_notifications/src/repositories/reminder_repository.dart';
 import 'package:daily_local_notifications/src/repositories/shared_prefs_repository.dart';
 import 'package:daily_local_notifications/src/ui/ui.dart';
+import 'package:daily_local_notifications/src/utils/daily_local_notifications_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Displays a row of toggle buttons for selecting days of the week.
 /// Displays a daily-checkbox-button for selecting
 /// or deselecting all days of the week.
-class DailyLocalNotification extends StatefulWidget {
+class DailyLocalNotifications extends StatefulWidget {
+  final DailyLocalNotificationsConfig config;
+
   /// Widget for displaying the "Reminder Title" text
   final Widget reminderTitleText;
 
@@ -31,9 +34,10 @@ class DailyLocalNotification extends StatefulWidget {
   final TextStyle timeNormalTextStyle;
   final TextStyle timeSelectedTextStyle;
 
-  /// Constructor for [DailyLocalNotification]
-  const DailyLocalNotification({
+  /// Constructor for [DailyLocalNotifications]
+  const DailyLocalNotifications({
     super.key,
+    required this.config,
     required this.reminderTitleText,
     required this.reminderRepeatText,
     required this.reminderDailyText,
@@ -44,10 +48,11 @@ class DailyLocalNotification extends StatefulWidget {
   });
 
   @override
-  State<DailyLocalNotification> createState() => _DailyLocalNotificationState();
+  State<DailyLocalNotifications> createState() =>
+      _DailyLocalNotificationsState();
 }
 
-class _DailyLocalNotificationState extends State<DailyLocalNotification> {
+class _DailyLocalNotificationsState extends State<DailyLocalNotifications> {
   late Future<ReminderSettingsProvider> loadDependencies;
 
   @override
@@ -56,7 +61,7 @@ class _DailyLocalNotificationState extends State<DailyLocalNotification> {
     loadDependencies = init();
   }
 
-  /// Creates a [DailyLocalNotification] widget.
+  /// Creates a [DailyLocalNotifications] widget.
   Future<ReminderSettingsProvider> init() async {
     final reminderRepository = ReminderRepository(
       flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin(),
@@ -70,6 +75,7 @@ class _DailyLocalNotificationState extends State<DailyLocalNotification> {
     final reminderSettingsProvider = ReminderSettingsProvider(
       reminderRepository: reminderRepository,
       sharedPrefsRepository: sharedPrefsRepository,
+      config: widget.config,
     );
 
     await reminderSettingsProvider.init();

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:daily_local_notifications/daily_local_notifications.dart';
 import 'package:daily_local_notifications/src/models/week_day.dart';
 import 'package:daily_local_notifications/src/repositories/reminder_repository.dart';
 import 'package:daily_local_notifications/src/repositories/shared_prefs_repository.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 class ReminderSettingsProvider extends ChangeNotifier {
   final ReminderRepository reminderRepository;
   final SharedPrefsRepository sharedPrefsRepository;
+  final DailyLocalNotificationsConfig config;
 
   List<WeekDay> reminderDays = [];
   TimeOfDay reminderTime = TimeOfDay.now();
@@ -17,6 +19,7 @@ class ReminderSettingsProvider extends ChangeNotifier {
   ReminderSettingsProvider({
     required this.reminderRepository,
     required this.sharedPrefsRepository,
+    required this.config,
   });
 
   /// Initially sets reminder settings saved in sharedPrefs
@@ -25,7 +28,8 @@ class ReminderSettingsProvider extends ChangeNotifier {
 
     reminderTime = sharedPrefsRepository.getReminderTime();
     isReminderEnabled = sharedPrefsRepository.isReminderEnabled();
-    reminderDays = sharedPrefsRepository.getReminderDays();
+    reminderDays =
+        sharedPrefsRepository.getReminderDays(config.weekDayTranslations);
 
     checkIfDailyReminderChecked();
 
@@ -106,11 +110,12 @@ class ReminderSettingsProvider extends ChangeNotifier {
 
   Future<void> clearReminder() async {
     log('NOTIFICATIONS::clearReminder');
-    reminderDays = WeekDay.initialWeekDays;
+    reminderDays =
+        WeekDay.initialWeekDaysFromTranslations(config.weekDayTranslations);
     isReminderEnabled = false;
     checkIfDailyReminderChecked();
 
-    await sharedPrefsRepository.setReminderDays(WeekDay.initialWeekDays);
+    await sharedPrefsRepository.setReminderDays(reminderDays);
     await sharedPrefsRepository.setReminderEnabled(false);
 
     await reminderRepository.cancelAllNotifications();

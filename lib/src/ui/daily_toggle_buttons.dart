@@ -9,6 +9,7 @@ class DailyToggleButtons extends StatelessWidget {
   final Color dayInactiveColor;
 
   const DailyToggleButtons({
+    super.key,
     required this.reminderRepeatText,
     required this.reminderDailyText,
     required this.dayActiveColor,

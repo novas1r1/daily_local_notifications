@@ -60,57 +60,19 @@ class WeekDay {
 
   String toJson() => json.encode(toMap());
 
-  static List<WeekDay> get initialWeekDays => [
-        const WeekDay(
-          name: 'Monday',
-          shortName: 'Mon',
-          isActive: true,
-          firstLetter: 'M',
-          dayIndex: DateTime.monday,
+  static List<WeekDay> initialWeekDaysFromTranslations(
+    List<String> weekDayTranslations,
+  ) =>
+      List.generate(
+        weekDayTranslations.length,
+        (index) => WeekDay(
+          name: weekDayTranslations[index],
+          firstLetter: weekDayTranslations[index][0],
+          shortName: weekDayTranslations[index].substring(0, 2),
+          isActive: false,
+          dayIndex: index + 1,
         ),
-        const WeekDay(
-          name: 'Tuesday',
-          shortName: 'Tue',
-          isActive: true,
-          firstLetter: 'T',
-          dayIndex: DateTime.tuesday,
-        ),
-        const WeekDay(
-          name: 'Wednesday',
-          shortName: 'Wed',
-          isActive: true,
-          firstLetter: 'W',
-          dayIndex: DateTime.wednesday,
-        ),
-        const WeekDay(
-          name: 'Thursday',
-          shortName: 'Thu',
-          isActive: true,
-          firstLetter: 'T',
-          dayIndex: DateTime.thursday,
-        ),
-        const WeekDay(
-          name: 'Friday',
-          shortName: 'Fri',
-          isActive: true,
-          firstLetter: 'F',
-          dayIndex: DateTime.friday,
-        ),
-        const WeekDay(
-          name: 'Saturday',
-          shortName: 'Sat',
-          isActive: true,
-          firstLetter: 'S',
-          dayIndex: DateTime.saturday,
-        ),
-        const WeekDay(
-          name: 'Sunday',
-          shortName: 'Sun',
-          isActive: true,
-          firstLetter: 'S',
-          dayIndex: DateTime.sunday,
-        ),
-      ];
+      );
 
   @override
   bool operator ==(Object other) {

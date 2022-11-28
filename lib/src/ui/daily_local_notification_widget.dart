@@ -1,6 +1,7 @@
 import 'package:daily_local_notifications/src/providers/reminder_settings_provider.dart';
 import 'package:daily_local_notifications/src/ui/daily_toggle_buttons.dart';
 import 'package:daily_local_notifications/src/ui/timer_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +26,8 @@ class DailyLocalNotificationWidget extends StatelessWidget {
   final TextStyle timeNormalTextStyle;
   final TextStyle timeSelectedTextStyle;
 
+  final String textSaveButton;
+
   /// Constructor for the [DailyLocalNotificationWidget]
   const DailyLocalNotificationWidget({
     super.key,
@@ -35,6 +38,7 @@ class DailyLocalNotificationWidget extends StatelessWidget {
     required this.dayInactiveColor,
     required this.timeNormalTextStyle,
     required this.timeSelectedTextStyle,
+    this.textSaveButton = 'Save',
   });
 
   @override
@@ -49,13 +53,27 @@ class DailyLocalNotificationWidget extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    value: provider.isReminderEnabled,
-                    title: reminderTitleText,
-                    onChanged: (bool isEnabled) =>
-                        provider.updateReminderEnabled(isEnabled),
-                  ),
+                  if (provider.config.useCupertinoSwitch)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        reminderTitleText,
+                        CupertinoSwitch(
+                          activeColor: Theme.of(context).primaryColor,
+                          value: provider.isReminderEnabled,
+                          onChanged: (bool isEnabled) =>
+                              provider.updateReminderEnabled(isEnabled),
+                        )
+                      ],
+                    )
+                  else
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      value: provider.isReminderEnabled,
+                      title: reminderTitleText,
+                      onChanged: (bool isEnabled) =>
+                          provider.updateReminderEnabled(isEnabled),
+                    ),
                   if (provider.isReminderEnabled)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -68,14 +86,14 @@ class DailyLocalNotificationWidget extends StatelessWidget {
                           dayInactiveColor: dayInactiveColor,
                         ),
                         TimePicker(
-                          is24HourMode: true,
+                          is24HourMode: provider.config.use24HourFormat,
                           is2D: true,
                           normalTextStyle: timeNormalTextStyle,
                           selectedTextStyle: timeSelectedTextStyle,
                         ),
                         ElevatedButton(
                           onPressed: () => provider.scheduleNotifications(),
-                          child: const Text('Save'),
+                          child: Text(provider.config.saveButtonText),
                         ),
                       ],
                     ),
