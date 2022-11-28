@@ -17,11 +17,13 @@ class DailyLocalNotificationWidget extends StatelessWidget {
 
   /// Active color for the day button
   /// Defaults to [Colors.blue]
-  final Color dayActiveColor;
+  final Color activeColor;
 
   /// Inactive color for the day button
   /// Defaults to [Colors.grey]
-  final Color dayInactiveColor;
+  final Color inactiveColor;
+
+  final Color backgroundColor;
 
   final TextStyle timeNormalTextStyle;
   final TextStyle timeSelectedTextStyle;
@@ -34,8 +36,9 @@ class DailyLocalNotificationWidget extends StatelessWidget {
     required this.reminderTitleText,
     required this.reminderRepeatText,
     required this.reminderDailyText,
-    required this.dayActiveColor,
-    required this.dayInactiveColor,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.backgroundColor,
     required this.timeNormalTextStyle,
     required this.timeSelectedTextStyle,
     this.textSaveButton = 'Save',
@@ -46,7 +49,7 @@ class DailyLocalNotificationWidget extends StatelessWidget {
     return Consumer<ReminderSettingsProvider>(
       builder: (context, provider, child) {
         return Container(
-          color: Theme.of(context).backgroundColor,
+          color: backgroundColor,
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +62,7 @@ class DailyLocalNotificationWidget extends StatelessWidget {
                       children: [
                         reminderTitleText,
                         CupertinoSwitch(
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: activeColor,
                           value: provider.isReminderEnabled,
                           onChanged: (bool isEnabled) =>
                               provider.updateReminderEnabled(isEnabled),
@@ -68,6 +71,8 @@ class DailyLocalNotificationWidget extends StatelessWidget {
                     )
                   else
                     SwitchListTile(
+                      activeColor: activeColor,
+                      inactiveTrackColor: inactiveColor,
                       contentPadding: EdgeInsets.zero,
                       value: provider.isReminderEnabled,
                       title: reminderTitleText,
@@ -82,8 +87,8 @@ class DailyLocalNotificationWidget extends StatelessWidget {
                         DailyToggleButtons(
                           reminderRepeatText: reminderRepeatText,
                           reminderDailyText: reminderDailyText,
-                          dayActiveColor: dayActiveColor,
-                          dayInactiveColor: dayInactiveColor,
+                          activeColor: activeColor,
+                          inactiveColor: inactiveColor,
                         ),
                         TimePicker(
                           is24HourMode: provider.config.use24HourFormat,

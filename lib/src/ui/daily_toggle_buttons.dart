@@ -5,15 +5,15 @@ import 'package:provider/provider.dart';
 class DailyToggleButtons extends StatelessWidget {
   final Widget reminderRepeatText;
   final Widget reminderDailyText;
-  final Color dayActiveColor;
-  final Color dayInactiveColor;
+  final Color activeColor;
+  final Color inactiveColor;
 
   const DailyToggleButtons({
     super.key,
     required this.reminderRepeatText,
     required this.reminderDailyText,
-    required this.dayActiveColor,
-    required this.dayInactiveColor,
+    required this.activeColor,
+    required this.inactiveColor,
   });
 
   @override
@@ -31,7 +31,7 @@ class DailyToggleButtons extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  activeColor: dayActiveColor,
+                  activeColor: activeColor,
                   checkColor: Colors.white,
                   value: provider.isDailyReminderEnabled,
                   onChanged: (isDaily) =>
@@ -55,8 +55,8 @@ class DailyToggleButtons extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             color: provider.reminderDays[index].isActive
-                                ? dayActiveColor
-                                : dayInactiveColor,
+                                ? activeColor
+                                : inactiveColor,
                           ),
                           height: 45,
                           width: 45,
