@@ -9,3 +9,4 @@
 library daily_local_notifications;
 
 export 'src/daily_local_notifications.dart';
+export 'src/utils/utils.dart';

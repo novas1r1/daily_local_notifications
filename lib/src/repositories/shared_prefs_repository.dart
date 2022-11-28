@@ -41,18 +41,27 @@ class SharedPrefsRepository {
   Future<void> setReminderEnabled(bool isEnabled) async =>
       sharedPrefs.setBool(SP_REMINDER_ENABLED_KEY, isEnabled);
 
-  List<WeekDay> getReminderDays() {
+  List<WeekDay> getReminderDays(List<String> weekDayTranslations) {
     final reminderDaysString = sharedPrefs.getString(SP_REMINDER_WEEK_DAYS);
 
     late List<WeekDay> reminderDays;
 
     if (reminderDaysString != null) {
       final reminderDaysList = jsonDecode(reminderDaysString) as List;
-      reminderDays = reminderDaysList
-          .map((day) => WeekDay.fromJson(day as String))
-          .toList();
+      final reminderDaysUpdated = <WeekDay>[];
+      for (var i = 0; i < reminderDaysList.length; i++) {
+        reminderDaysUpdated.add(
+          WeekDay.fromJson(
+            reminderDaysList[i] as String,
+            weekDayTranslations[i],
+          ),
+        );
+      }
+
+      reminderDays = reminderDaysUpdated;
     } else {
-      reminderDays = WeekDay.initialWeekDays;
+      reminderDays =
+          WeekDay.initialWeekDaysFromTranslations(weekDayTranslations);
     }
 
     return reminderDays;

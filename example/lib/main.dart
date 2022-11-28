@@ -41,7 +41,22 @@ class MyApp extends StatelessWidget {
             appBar: AppBar(
               title: const Text('Daily Local Notifications'),
             ),
-            body: DailyLocalNotification(
+            body: DailyLocalNotifications(
+              notificationConfig: const NotificationConfig(),
+              config: DailyLocalNotificationsConfig(
+                weekDayTranslations: [
+                  'Montag',
+                  'Dienstag',
+                  'Mittwoch',
+                  'Donnerstag',
+                  'Freitag',
+                  'Samstag',
+                  'Sonntag',
+                ],
+                use24HourFormat: true,
+                useCupertinoSwitch: true,
+                saveButtonText: 'Speichern',
+              ),
               reminderTitleText: Text(
                 'Reminder Title',
                 style: Theme.of(context).textTheme.bodyLarge,
