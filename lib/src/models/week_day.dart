@@ -8,12 +8,14 @@ class WeekDay {
   final String name;
   final String shortName;
   final bool isActive;
+  final int dayIndex;
 
   const WeekDay({
     required this.name,
     required this.firstLetter,
     required this.shortName,
     required this.isActive,
+    required this.dayIndex,
   });
 
   factory WeekDay.fromJson(String source) =>
@@ -25,6 +27,7 @@ class WeekDay {
       name: (map['name'] ?? '') as String,
       shortName: (map['shortName'] ?? '') as String,
       isActive: (map['isActive'] ?? false) as bool,
+      dayIndex: (map['dayIndex'] ?? 0) as int,
     );
   }
 
@@ -33,12 +36,14 @@ class WeekDay {
     String? name,
     String? shortName,
     bool? isActive,
+    int? dayIndex,
   }) {
     return WeekDay(
       firstLetter: firstLetter ?? this.firstLetter,
       name: name ?? this.name,
       shortName: shortName ?? this.shortName,
       isActive: isActive ?? this.isActive,
+      dayIndex: dayIndex ?? this.dayIndex,
     );
   }
 
@@ -49,10 +54,63 @@ class WeekDay {
       ..addAll({'firstLetter': firstLetter})
       ..addAll({'name': name})
       ..addAll({'shortName': shortName})
-      ..addAll({'isActive': isActive});
+      ..addAll({'isActive': isActive})
+      ..addAll({'dayIndex': dayIndex});
   }
 
   String toJson() => json.encode(toMap());
+
+  static List<WeekDay> get initialWeekDays => [
+        const WeekDay(
+          name: 'Monday',
+          shortName: 'Mon',
+          isActive: true,
+          firstLetter: 'M',
+          dayIndex: DateTime.monday,
+        ),
+        const WeekDay(
+          name: 'Tuesday',
+          shortName: 'Tue',
+          isActive: true,
+          firstLetter: 'T',
+          dayIndex: DateTime.tuesday,
+        ),
+        const WeekDay(
+          name: 'Wednesday',
+          shortName: 'Wed',
+          isActive: true,
+          firstLetter: 'W',
+          dayIndex: DateTime.wednesday,
+        ),
+        const WeekDay(
+          name: 'Thursday',
+          shortName: 'Thu',
+          isActive: true,
+          firstLetter: 'T',
+          dayIndex: DateTime.thursday,
+        ),
+        const WeekDay(
+          name: 'Friday',
+          shortName: 'Fri',
+          isActive: true,
+          firstLetter: 'F',
+          dayIndex: DateTime.friday,
+        ),
+        const WeekDay(
+          name: 'Saturday',
+          shortName: 'Sat',
+          isActive: true,
+          firstLetter: 'S',
+          dayIndex: DateTime.saturday,
+        ),
+        const WeekDay(
+          name: 'Sunday',
+          shortName: 'Sun',
+          isActive: true,
+          firstLetter: 'S',
+          dayIndex: DateTime.sunday,
+        ),
+      ];
 
   @override
   bool operator ==(Object other) {
@@ -62,7 +120,8 @@ class WeekDay {
         other.firstLetter == firstLetter &&
         other.name == name &&
         other.shortName == shortName &&
-        other.isActive == isActive;
+        other.isActive == isActive &&
+        other.dayIndex == dayIndex;
   }
 
   @override
@@ -70,51 +129,12 @@ class WeekDay {
     return firstLetter.hashCode ^
         name.hashCode ^
         shortName.hashCode ^
-        isActive.hashCode;
+        isActive.hashCode ^
+        dayIndex.hashCode;
   }
 
-  static List<WeekDay> get initialWeekDays => const [
-        WeekDay(
-          name: 'Monday',
-          shortName: 'Mon',
-          isActive: true,
-          firstLetter: 'M',
-        ),
-        WeekDay(
-          name: 'Tuesday',
-          shortName: 'Tue',
-          isActive: true,
-          firstLetter: 'T',
-        ),
-        WeekDay(
-          name: 'Wednesday',
-          shortName: 'Wed',
-          isActive: true,
-          firstLetter: 'W',
-        ),
-        WeekDay(
-          name: 'Thursday',
-          shortName: 'Thu',
-          isActive: true,
-          firstLetter: 'T',
-        ),
-        WeekDay(
-          name: 'Friday',
-          shortName: 'Fri',
-          isActive: true,
-          firstLetter: 'F',
-        ),
-        WeekDay(
-          name: 'Saturday',
-          shortName: 'Sat',
-          isActive: true,
-          firstLetter: 'S',
-        ),
-        WeekDay(
-          name: 'Sunday',
-          shortName: 'Sun',
-          isActive: true,
-          firstLetter: 'S',
-        ),
-      ];
+  @override
+  String toString() {
+    return 'WeekDay(firstLetter: $firstLetter, name: $name, shortName: $shortName, isActive: $isActive, dayIndex: $dayIndex)';
+  }
 }

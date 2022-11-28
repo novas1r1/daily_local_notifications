@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:daily_local_notifications/src/models/week_day.dart';
 import 'package:daily_local_notifications/src/repositories/reminder_repository.dart';
 import 'package:daily_local_notifications/src/repositories/shared_prefs_repository.dart';
@@ -55,15 +57,14 @@ class ReminderSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Checks if daily reminder should be enabled or disabled
   void updateDailyReminderEnabled(bool isEnabled) {
     isDailyReminderEnabled = isEnabled;
 
     if (isEnabled) {
-      // set all days to active
       reminderDays =
           reminderDays.map((day) => day.copyWith(isActive: true)).toList();
     } else {
-      // set all days to inactive
       reminderDays =
           reminderDays.map((day) => day.copyWith(isActive: false)).toList();
     }
@@ -88,24 +89,30 @@ class ReminderSettingsProvider extends ChangeNotifier {
   }
 
   Future<void> scheduleNotifications() async {
-    print('Scheduling notifications..., isReminderEnabled: $isReminderEnabled, '
-        'reminderDays: $reminderDays, reminderTime: $reminderTime');
+    log('NOTIFICATIONS::scheduleNotifications: '
+        'isReminderEnabled: $isReminderEnabled, '
+        'reminderDays: $reminderDays, '
+        'reminderTime: $reminderTime');
     await sharedPrefsRepository.setReminderDays(reminderDays);
     await sharedPrefsRepository.setReminderTime(reminderTime);
     await sharedPrefsRepository.setReminderEnabled(isReminderEnabled);
 
     // await reminderRepository.scheduleWeeklyMondayTenAMNotification();
-    await reminderRepository.scheduleDailyTenAMNotification();
+    await reminderRepository.scheduleDailyNotificationByTimeAndDay(
+      reminderTime,
+      reminderDays,
+    );
   }
 
   Future<void> clearReminder() async {
-    // TODO remove all notifications
-
+    log('NOTIFICATIONS::clearReminder');
     reminderDays = WeekDay.initialWeekDays;
     isReminderEnabled = false;
     checkIfDailyReminderChecked();
 
     await sharedPrefsRepository.setReminderDays(WeekDay.initialWeekDays);
     await sharedPrefsRepository.setReminderEnabled(false);
+
+    await reminderRepository.cancelAllNotifications();
   }
 }
