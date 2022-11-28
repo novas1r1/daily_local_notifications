@@ -73,7 +73,6 @@ class ReminderRepository {
       log('NOTIFICATIONS::scheduleNotifications for: $timeOfDay, $activeDays');
 
       for (final activeDay in activeDays) {
-        // TODO check if id needs to be unique
         await flutterLocalNotificationsPlugin.zonedSchedule(
           activeDay,
           '${notificationConfig.title} $activeDay',

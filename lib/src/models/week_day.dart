@@ -18,14 +18,17 @@ class WeekDay {
     required this.dayIndex,
   });
 
-  factory WeekDay.fromJson(String source) =>
-      WeekDay.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory WeekDay.fromJson(String source, String dayTranslation) =>
+      WeekDay.fromMap(
+        json.decode(source) as Map<String, dynamic>,
+        dayTranslation,
+      );
 
-  factory WeekDay.fromMap(Map<String, dynamic> map) {
+  factory WeekDay.fromMap(Map<String, dynamic> map, String dayTranslation) {
     return WeekDay(
-      firstLetter: (map['firstLetter'] ?? '') as String,
-      name: (map['name'] ?? '') as String,
-      shortName: (map['shortName'] ?? '') as String,
+      firstLetter: dayTranslation[0],
+      name: dayTranslation,
+      shortName: dayTranslation.substring(0, 2),
       isActive: (map['isActive'] ?? false) as bool,
       dayIndex: (map['dayIndex'] ?? 0) as int,
     );
@@ -69,7 +72,7 @@ class WeekDay {
           name: weekDayTranslations[index],
           firstLetter: weekDayTranslations[index][0],
           shortName: weekDayTranslations[index].substring(0, 2),
-          isActive: false,
+          isActive: true,
           dayIndex: index + 1,
         ),
       );

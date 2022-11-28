@@ -48,9 +48,17 @@ class SharedPrefsRepository {
 
     if (reminderDaysString != null) {
       final reminderDaysList = jsonDecode(reminderDaysString) as List;
-      reminderDays = reminderDaysList
-          .map((day) => WeekDay.fromJson(day as String))
-          .toList();
+      final reminderDaysUpdated = <WeekDay>[];
+      for (var i = 0; i < reminderDaysList.length; i++) {
+        reminderDaysUpdated.add(
+          WeekDay.fromJson(
+            reminderDaysList[i] as String,
+            weekDayTranslations[i],
+          ),
+        );
+      }
+
+      reminderDays = reminderDaysUpdated;
     } else {
       reminderDays =
           WeekDay.initialWeekDaysFromTranslations(weekDayTranslations);

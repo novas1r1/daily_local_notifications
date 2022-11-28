@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
                   'Donnerstag',
                   'Freitag',
                   'Samstag',
-                  'Sonntag'
+                  'Sonntag',
                 ],
                 use24HourFormat: true,
                 useCupertinoSwitch: true,
