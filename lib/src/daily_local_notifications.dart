@@ -171,7 +171,7 @@ class _DailyLocalNotificationWidget extends StatelessWidget {
                           dayActiveColor: dayActiveColor,
                           dayInactiveColor: dayInactiveColor,
                         ),
-                        TimePicker(
+                        _TimePicker(
                           is24HourMode: true,
                           is2D: true,
                           normalTextStyle: timeNormalTextStyle,
@@ -193,7 +193,7 @@ class _DailyLocalNotificationWidget extends StatelessWidget {
   }
 }
 
-class _DailyToggleButtons extends StatefulWidget {
+class _DailyToggleButtons extends StatelessWidget {
   final Widget reminderRepeatText;
   final Widget reminderDailyText;
   final Color dayActiveColor;
@@ -207,11 +207,6 @@ class _DailyToggleButtons extends StatefulWidget {
   });
 
   @override
-  State<_DailyToggleButtons> createState() => _DailyToggleButtonsState();
-}
-
-class _DailyToggleButtonsState extends State<_DailyToggleButtons> {
-  @override
   Widget build(BuildContext context) {
     return Consumer<ReminderSettingsProvider>(
       builder: (context, provider, child) {
@@ -219,14 +214,14 @@ class _DailyToggleButtonsState extends State<_DailyToggleButtons> {
           children: [
             Row(
               children: [
-                widget.reminderRepeatText,
+                reminderRepeatText,
                 const Spacer(),
-                widget.reminderDailyText,
+                reminderDailyText,
                 Checkbox(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  activeColor: widget.dayActiveColor,
+                  activeColor: dayActiveColor,
                   checkColor: Colors.white,
                   value: provider.isDailyReminderEnabled,
                   onChanged: (isDaily) =>
@@ -250,8 +245,8 @@ class _DailyToggleButtonsState extends State<_DailyToggleButtons> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             color: provider.reminderDays[index].isActive
-                                ? widget.dayActiveColor
-                                : widget.dayInactiveColor,
+                                ? dayActiveColor
+                                : dayInactiveColor,
                           ),
                           height: 45,
                           width: 45,
@@ -273,14 +268,13 @@ class _DailyToggleButtonsState extends State<_DailyToggleButtons> {
   }
 }
 
-class TimePicker extends StatelessWidget {
+class _TimePicker extends StatelessWidget {
   final bool is24HourMode;
   final TextStyle? normalTextStyle;
   final TextStyle? selectedTextStyle;
   final bool is2D;
 
-  const TimePicker({
-    super.key,
+  const _TimePicker({
     required this.is24HourMode,
     required this.is2D,
     required this.normalTextStyle,
