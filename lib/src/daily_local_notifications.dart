@@ -27,11 +27,13 @@ class DailyLocalNotifications extends StatefulWidget {
 
   /// Active color for the day button
   /// Defaults to [Colors.blue]
-  final Color dayActiveColor;
+  final Color activeColor;
 
   /// Inactive color for the day button
   /// Defaults to [Colors.grey]
-  final Color dayInactiveColor;
+  final Color inactiveColor;
+
+  final Color backgroundColor;
 
   final TextStyle timeNormalTextStyle;
   final TextStyle timeSelectedTextStyle;
@@ -44,8 +46,9 @@ class DailyLocalNotifications extends StatefulWidget {
     required this.reminderTitleText,
     required this.reminderRepeatText,
     required this.reminderDailyText,
-    required this.dayActiveColor,
-    required this.dayInactiveColor,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.backgroundColor,
     required this.timeNormalTextStyle,
     required this.timeSelectedTextStyle,
   });
@@ -103,8 +106,9 @@ class _DailyLocalNotificationsState extends State<DailyLocalNotifications> {
               reminderTitleText: widget.reminderTitleText,
               reminderRepeatText: widget.reminderRepeatText,
               reminderDailyText: widget.reminderDailyText,
-              dayActiveColor: widget.dayActiveColor,
-              dayInactiveColor: widget.dayInactiveColor,
+              activeColor: widget.activeColor,
+              inactiveColor: widget.inactiveColor,
+              backgroundColor: widget.backgroundColor,
               timeNormalTextStyle: widget.timeNormalTextStyle,
               timeSelectedTextStyle: widget.timeSelectedTextStyle,
             ),

@@ -69,8 +69,8 @@ class MyApp extends StatelessWidget {
                 'Daily',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              dayActiveColor: Theme.of(context).primaryColor,
-              dayInactiveColor: Theme.of(context).primaryColor.withOpacity(0.3),
+              activeColor: Theme.of(context).primaryColor,
+              inactiveColor: Theme.of(context).primaryColor.withOpacity(0.3),
               timeNormalTextStyle:
                   const TextStyle(fontSize: 24, color: Colors.grey),
               timeSelectedTextStyle: TextStyle(
@@ -78,6 +78,7 @@ class MyApp extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.bold,
               ),
+              backgroundColor: Theme.of(context).backgroundColor,
             ),
           );
         },
