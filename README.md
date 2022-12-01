@@ -28,6 +28,15 @@ flutter packages get
 ```
 
 ---
+## Setup
+- add to app/build.gradle
+- add app_icon.png to assets
+---
+## TODO
+- save button should be custom widget -> now saved automatically
+- day buttons should be custom widgets (active/inactive)
+- 
+---
 ## Example
 ```dart
 DailyLocalNotification(

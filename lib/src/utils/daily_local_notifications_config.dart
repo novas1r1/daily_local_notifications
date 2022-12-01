@@ -3,7 +3,6 @@ class DailyLocalNotificationsConfig {
   /// Defaults to ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
   /// 'Saturday', 'Sunday']
   final List<String> weekDayTranslations;
-  final String saveButtonText;
   final bool use24HourFormat;
   final bool useCupertinoSwitch;
 
@@ -20,6 +19,5 @@ class DailyLocalNotificationsConfig {
     ],
     this.use24HourFormat = true,
     this.useCupertinoSwitch = true,
-    this.saveButtonText = 'Save',
   });
 }

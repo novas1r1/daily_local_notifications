@@ -28,7 +28,7 @@ class DailyLocalNotificationWidget extends StatelessWidget {
   final TextStyle timeNormalTextStyle;
   final TextStyle timeSelectedTextStyle;
 
-  final String textSaveButton;
+  final EdgeInsets contentPadding;
 
   /// Constructor for the [DailyLocalNotificationWidget]
   const DailyLocalNotificationWidget({
@@ -41,7 +41,7 @@ class DailyLocalNotificationWidget extends StatelessWidget {
     required this.backgroundColor,
     required this.timeNormalTextStyle,
     required this.timeSelectedTextStyle,
-    this.textSaveButton = 'Save',
+    required this.contentPadding,
   });
 
   @override
@@ -49,8 +49,8 @@ class DailyLocalNotificationWidget extends StatelessWidget {
     return Consumer<ReminderSettingsProvider>(
       builder: (context, provider, child) {
         return Container(
+          padding: contentPadding,
           color: backgroundColor,
-          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -95,10 +95,6 @@ class DailyLocalNotificationWidget extends StatelessWidget {
                           is2D: true,
                           normalTextStyle: timeNormalTextStyle,
                           selectedTextStyle: timeSelectedTextStyle,
-                        ),
-                        ElevatedButton(
-                          onPressed: () => provider.scheduleNotifications(),
-                          child: Text(provider.config.saveButtonText),
                         ),
                       ],
                     ),

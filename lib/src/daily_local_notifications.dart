@@ -4,6 +4,7 @@ import 'package:daily_local_notifications/src/repositories/shared_prefs_reposito
 import 'package:daily_local_notifications/src/ui/ui.dart';
 import 'package:daily_local_notifications/src/utils/daily_local_notifications_config.dart';
 import 'package:daily_local_notifications/src/utils/notification_config.dart';
+import 'package:daily_local_notifications/src/utils/styling_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DailyLocalNotifications extends StatefulWidget {
   final DailyLocalNotificationsConfig config;
   final NotificationConfig notificationConfig;
+  final StylingConfig stylingConfig;
 
   /// Widget for displaying the "Reminder Title" text
   final Widget reminderTitleText;
@@ -25,16 +27,6 @@ class DailyLocalNotifications extends StatefulWidget {
   /// Widget for displaying the "Daily" text for the toggle button on the right
   final Widget reminderDailyText;
 
-  /// Active color for the day button
-  /// Defaults to [Colors.blue]
-  final Color activeColor;
-
-  /// Inactive color for the day button
-  /// Defaults to [Colors.grey]
-  final Color inactiveColor;
-
-  final Color backgroundColor;
-
   final TextStyle timeNormalTextStyle;
   final TextStyle timeSelectedTextStyle;
 
@@ -43,12 +35,10 @@ class DailyLocalNotifications extends StatefulWidget {
     super.key,
     required this.config,
     required this.notificationConfig,
+    required this.stylingConfig,
     required this.reminderTitleText,
     required this.reminderRepeatText,
     required this.reminderDailyText,
-    required this.activeColor,
-    required this.inactiveColor,
-    required this.backgroundColor,
     required this.timeNormalTextStyle,
     required this.timeSelectedTextStyle,
   });
@@ -106,11 +96,12 @@ class _DailyLocalNotificationsState extends State<DailyLocalNotifications> {
               reminderTitleText: widget.reminderTitleText,
               reminderRepeatText: widget.reminderRepeatText,
               reminderDailyText: widget.reminderDailyText,
-              activeColor: widget.activeColor,
-              inactiveColor: widget.inactiveColor,
-              backgroundColor: widget.backgroundColor,
+              activeColor: widget.stylingConfig.activeColor,
+              inactiveColor: widget.stylingConfig.inactiveColor,
+              backgroundColor: widget.stylingConfig.backgroundColor,
               timeNormalTextStyle: widget.timeNormalTextStyle,
               timeSelectedTextStyle: widget.timeSelectedTextStyle,
+              contentPadding: widget.stylingConfig.contentPadding,
             ),
           );
         } else {

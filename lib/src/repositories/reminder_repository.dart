@@ -14,8 +14,6 @@ const MethodChannel platform =
 
 const String portName = 'notification_send_port';
 
-/// TODO: disable save button if nothing changed
-/// TODO: how to trigger new notifications
 class ReminderRepository {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final NotificationConfig notificationConfig;

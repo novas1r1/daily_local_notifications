@@ -1,3 +1,15 @@
+import 'package:flutter/material.dart';
+
 class StylingConfig {
-  // TODO for colors and text styles etc.
+  final EdgeInsets contentPadding;
+  final Color activeColor;
+  final Color inactiveColor;
+  final Color backgroundColor;
+
+  StylingConfig({
+    this.contentPadding = const EdgeInsets.all(16),
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.backgroundColor,
+  });
 }

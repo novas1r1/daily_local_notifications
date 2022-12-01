@@ -15,73 +15,38 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Daily Local Notifications',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        backgroundColor: Colors.black87,
-        textTheme: const TextTheme(
-          bodySmall: TextStyle(color: Colors.white, fontSize: 10),
-          bodyMedium: TextStyle(color: Colors.white, fontSize: 12),
-          bodyLarge: TextStyle(color: Colors.white, fontSize: 14),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Daily Local Notifications'),
         ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-            foregroundColor: MaterialStateProperty.all(Colors.white),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+        body: DailyLocalNotifications(
+          notificationConfig: const NotificationConfig(),
+          config: DailyLocalNotificationsConfig(),
+          stylingConfig: StylingConfig(
+            activeColor: Theme.of(context).primaryColor,
+            inactiveColor: Theme.of(context).primaryColor.withOpacity(0.3),
+            backgroundColor: Theme.of(context).backgroundColor,
+          ),
+          reminderTitleText: Text(
+            'Reminder Title',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          reminderRepeatText: Text(
+            'Repeat',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          reminderDailyText: Text(
+            'Daily',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          timeNormalTextStyle:
+              const TextStyle(fontSize: 24, color: Colors.grey),
+          timeSelectedTextStyle: TextStyle(
+            fontSize: 24,
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      ),
-      home: Builder(
-        builder: (context) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Daily Local Notifications'),
-            ),
-            body: DailyLocalNotifications(
-              notificationConfig: const NotificationConfig(),
-              config: DailyLocalNotificationsConfig(
-                weekDayTranslations: [
-                  'Montag',
-                  'Dienstag',
-                  'Mittwoch',
-                  'Donnerstag',
-                  'Freitag',
-                  'Samstag',
-                  'Sonntag',
-                ],
-                use24HourFormat: true,
-                useCupertinoSwitch: true,
-                saveButtonText: 'Speichern',
-              ),
-              reminderTitleText: Text(
-                'Reminder Title',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              reminderRepeatText: Text(
-                'Repeat',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              reminderDailyText: Text(
-                'Daily',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              activeColor: Theme.of(context).primaryColor,
-              inactiveColor: Theme.of(context).primaryColor.withOpacity(0.3),
-              timeNormalTextStyle:
-                  const TextStyle(fontSize: 24, color: Colors.grey),
-              timeSelectedTextStyle: TextStyle(
-                fontSize: 24,
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-              backgroundColor: Theme.of(context).backgroundColor,
-            ),
-          );
-        },
       ),
     );
   }

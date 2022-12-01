@@ -46,8 +46,9 @@ class ReminderSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateReminderTime(DateTime dateTime) {
+  Future<void> updateReminderTime(DateTime dateTime) async {
     reminderTime = TimeOfDay.fromDateTime(dateTime);
+    await scheduleNotifications();
     notifyListeners();
   }
 
@@ -56,13 +57,15 @@ class ReminderSettingsProvider extends ChangeNotifier {
 
     if (!isEnabled) {
       await clearReminder();
+    } else {
+      await scheduleNotifications();
     }
 
     notifyListeners();
   }
 
   /// Checks if daily reminder should be enabled or disabled
-  void updateDailyReminderEnabled(bool isEnabled) {
+  Future<void> updateDailyReminderEnabled(bool isEnabled) async {
     isDailyReminderEnabled = isEnabled;
 
     if (isEnabled) {
@@ -73,10 +76,12 @@ class ReminderSettingsProvider extends ChangeNotifier {
           reminderDays.map((day) => day.copyWith(isActive: false)).toList();
     }
 
+    await scheduleNotifications();
+
     notifyListeners();
   }
 
-  void toggleDay(WeekDay day) {
+  Future<void> toggleDay(WeekDay day) async {
     final updatedReminderDays = reminderDays.toList();
     final index = updatedReminderDays.indexWhere(
       (element) => element.shortName == day.shortName,
@@ -89,6 +94,8 @@ class ReminderSettingsProvider extends ChangeNotifier {
     reminderDays = updatedReminderDays;
     checkIfDailyReminderChecked();
 
+    await scheduleNotifications();
+
     notifyListeners();
   }
 
@@ -97,11 +104,11 @@ class ReminderSettingsProvider extends ChangeNotifier {
         'isReminderEnabled: $isReminderEnabled, '
         'reminderDays: $reminderDays, '
         'reminderTime: $reminderTime');
+
     await sharedPrefsRepository.setReminderDays(reminderDays);
     await sharedPrefsRepository.setReminderTime(reminderTime);
     await sharedPrefsRepository.setReminderEnabled(isReminderEnabled);
 
-    // await reminderRepository.scheduleWeeklyMondayTenAMNotification();
     await reminderRepository.scheduleDailyNotificationByTimeAndDay(
       reminderTime,
       reminderDays,
