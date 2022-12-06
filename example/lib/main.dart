@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:daily_local_notifications/daily_local_notifications.dart';
 import 'package:flutter/material.dart';
 
@@ -46,6 +48,7 @@ class MyApp extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             fontWeight: FontWeight.bold,
           ),
+          onNotificationsUpdated: () => log('Notifications updated'),
         ),
       ),
     );

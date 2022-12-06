@@ -30,6 +30,8 @@ class DailyLocalNotifications extends StatefulWidget {
   final TextStyle timeNormalTextStyle;
   final TextStyle timeSelectedTextStyle;
 
+  final VoidCallback onNotificationsUpdated;
+
   /// Constructor for [DailyLocalNotifications]
   const DailyLocalNotifications({
     super.key,
@@ -41,6 +43,7 @@ class DailyLocalNotifications extends StatefulWidget {
     required this.reminderDailyText,
     required this.timeNormalTextStyle,
     required this.timeSelectedTextStyle,
+    required this.onNotificationsUpdated,
   });
 
   @override
@@ -73,6 +76,7 @@ class _DailyLocalNotificationsState extends State<DailyLocalNotifications> {
       reminderRepository: reminderRepository,
       sharedPrefsRepository: sharedPrefsRepository,
       config: widget.config,
+      onNotificationsUpdated: widget.onNotificationsUpdated,
     );
 
     await reminderSettingsProvider.init();

@@ -10,6 +10,7 @@ class ReminderSettingsProvider extends ChangeNotifier {
   final ReminderRepository reminderRepository;
   final SharedPrefsRepository sharedPrefsRepository;
   final DailyLocalNotificationsConfig config;
+  final VoidCallback onNotificationsUpdated;
 
   List<WeekDay> reminderDays = [];
   TimeOfDay reminderTime = TimeOfDay.now();
@@ -20,6 +21,7 @@ class ReminderSettingsProvider extends ChangeNotifier {
     required this.reminderRepository,
     required this.sharedPrefsRepository,
     required this.config,
+    required this.onNotificationsUpdated,
   });
 
   /// Initially sets reminder settings saved in sharedPrefs
@@ -113,6 +115,8 @@ class ReminderSettingsProvider extends ChangeNotifier {
       reminderTime,
       reminderDays,
     );
+
+    onNotificationsUpdated();
   }
 
   Future<void> clearReminder() async {
