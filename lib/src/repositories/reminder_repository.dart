@@ -73,8 +73,8 @@ class ReminderRepository {
       for (final activeDay in activeDays) {
         await flutterLocalNotificationsPlugin.zonedSchedule(
           activeDay,
-          '${notificationConfig.title} $activeDay',
-          '${notificationConfig.description} $timeOfDay',
+          notificationConfig.title,
+          notificationConfig.description,
           _nextInstanceOfDay(timeOfDay, activeDay),
           NotificationDetails(
             android: AndroidNotificationDetails(
