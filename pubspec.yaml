@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^12.0.4
+  flutter_local_notifications: ^13.0.0
   flutter_time_picker_spinner:
     git: https://github.com/novas1r1/flutter_time_picker_spinner.git
   flutter_timezone: ^1.0.4
