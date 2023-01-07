@@ -100,6 +100,7 @@ class WeekDay {
 
   @override
   String toString() {
-    return 'WeekDay(firstLetter: $firstLetter, name: $name, shortName: $shortName, isActive: $isActive, dayIndex: $dayIndex)';
+    return 'WeekDay(firstLetter: $firstLetter, name: $name, '
+        'shortName: $shortName, isActive: $isActive, dayIndex: $dayIndex)';
   }
 }

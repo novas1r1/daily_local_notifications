@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:daily_local_notifications/src/models/week_day.dart';
 import 'package:daily_local_notifications/src/utils/notification_config.dart';
@@ -45,22 +46,46 @@ class ReminderRepository {
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       // onDidReceiveBackgroundNotificationResponse: (details) => log(
-      //   'NOTIFICATIONS::onDidReceiveBackgroundNotificationResponse: $details',
+      //   'NOTIFICATIONS::onDidReceiveBackgroundNotificationResponse:'
+      //' $details',
       // ),
       onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
+
+    // REQUEST PERMISSION
+    await requestPermissions();
+  }
+
+  Future<void> requestPermissions() async {
+    if (Platform.isIOS) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+    } else {
+      final plugin =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      if (plugin != null) {
+        await plugin.requestPermission();
+      }
+    }
   }
 
   /// Schedules notifications for a specific [timeOfDay] each weekday active
   /// within [days]
   /// Cancels all setup notifications first
-  /// TODO: define channel id
-  /// TODO: define channel name
   Future<void> scheduleDailyNotificationByTimeAndDay(
     TimeOfDay timeOfDay,
     List<WeekDay> days,
   ) async {
-    log('NOTIFICATIONS::scheduleDailyNotificationByTimeAndDay: $timeOfDay, $days');
+    log('NOTIFICATIONS::scheduleDailyNotificationByTimeAndDay: '
+        '$timeOfDay, $days');
 
     await cancelAllNotifications();
 
@@ -92,31 +117,6 @@ class ReminderRepository {
     }
   }
 
-  /* Future<void> scheduleDailyNotificationByTime(TimeOfDay timeOfDay) async {
-    log('NOTIFICATIONS::scheduleDailyNotificationByTime: $timeOfDay');
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'daily scheduled notification title',
-      'daily scheduled notification body',
-      _nextInstanceOfTimeOfDay(timeOfDay),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'daily notification channel id',
-          'daily notification channel name',
-          channelDescription: 'daily notification description',
-        ),
-      ),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  } */
-
-  Future<void> sendNotification() async {
-    // await notificationProvider.sendNotification();
-  }
-
   void onDidReceiveLocalNotification(
     int id,
     String? title,
@@ -143,21 +143,7 @@ class ReminderRepository {
     if (notificationResponse.payload != null) {
       log('NOTIFICATIONS::notification payload: $payload');
     }
-    /* await Navigator.push(
-      context,
-      MaterialPageRoute<void>(builder: (context) => SecondScreen(payload)),
-    ); */
   }
-
-  /* REQUEST PERMISSION IOS
-  final bool result = await flutterLocalNotificationsPlugin
-    .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
-    ?.requestPermissions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );*/
 
   Future<void> cancelNotification(int id, String? tag) async {
     log('NOTIFICATIONS::cancelNotification id: $id');
@@ -174,51 +160,6 @@ class ReminderRepository {
     final timeZoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
-
-  /// To test we don't validate past dates when using `matchDateTimeComponents`
-/*   Future<void> scheduleWeeklyMondayTenAMNotification() async {
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'weekly scheduled notification title',
-      'weekly scheduled notification body',
-      _nextInstanceOfMondayTenAM(),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'weekly notification channel id',
-          'weekly notification channel name',
-          channelDescription: 'weekly notificationdescription',
-        ),
-      ),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-    );
-  } */
-
-/*   tz.TZDateTime _nextInstanceOfMondayTenAM() {
-    var scheduledDate = _nextInstanceOfTimeOfDay();
-    while (scheduledDate.weekday != DateTime.monday) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-    return scheduledDate;
-  }
- */
-/*   tz.TZDateTime _nextInstanceOfTenAM() {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduledDate = tz.TZDateTime(
-      tz.local,
-      now.year,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute + 1,
-    );
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-    return scheduledDate;
-  } */
 
   tz.TZDateTime _nextInstanceOfTimeOfDay(TimeOfDay timeOfDay) {
     final now = tz.TZDateTime.now(tz.local);
