@@ -47,8 +47,7 @@ class DailyLocalNotifications extends StatefulWidget {
   });
 
   @override
-  State<DailyLocalNotifications> createState() =>
-      _DailyLocalNotificationsState();
+  State<DailyLocalNotifications> createState() => _DailyLocalNotificationsState();
 }
 
 class _DailyLocalNotificationsState extends State<DailyLocalNotifications> {
@@ -92,8 +91,7 @@ class _DailyLocalNotificationsState extends State<DailyLocalNotifications> {
         BuildContext context,
         AsyncSnapshot<ReminderSettingsProvider> snapshot,
       ) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
           return ChangeNotifierProvider<ReminderSettingsProvider>.value(
             value: snapshot.data!,
             child: DailyLocalNotificationWidget(
@@ -108,11 +106,11 @@ class _DailyLocalNotificationsState extends State<DailyLocalNotifications> {
               contentPadding: widget.stylingConfig.contentPadding,
             ),
           );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
         }
+
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }

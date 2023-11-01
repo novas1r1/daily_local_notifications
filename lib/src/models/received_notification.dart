@@ -4,7 +4,7 @@ class ReceivedNotification {
   final String? body;
   final String? payload;
 
-  ReceivedNotification({
+  const ReceivedNotification({
     required this.id,
     required this.title,
     required this.body,

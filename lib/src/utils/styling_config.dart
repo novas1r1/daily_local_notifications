@@ -6,7 +6,7 @@ class StylingConfig {
   final Color inactiveColor;
   final Color backgroundColor;
 
-  StylingConfig({
+  const StylingConfig({
     this.contentPadding = const EdgeInsets.all(16),
     required this.activeColor,
     required this.inactiveColor,

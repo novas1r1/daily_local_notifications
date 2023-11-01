@@ -7,7 +7,7 @@ class DailyLocalNotificationsConfig {
   final bool useCupertinoSwitch;
 
   /// Constructor for [DailyLocalNotificationsConfig]
-  DailyLocalNotificationsConfig({
+  const DailyLocalNotificationsConfig({
     this.weekDayTranslations = const [
       'Monday',
       'Tuesday',

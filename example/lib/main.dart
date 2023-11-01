@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
         ),
         body: DailyLocalNotifications(
           notificationConfig: const NotificationConfig(),
-          config: DailyLocalNotificationsConfig(),
+          config: const DailyLocalNotificationsConfig(),
           stylingConfig: StylingConfig(
             activeColor: Theme.of(context).primaryColor,
             inactiveColor: Theme.of(context).primaryColor.withOpacity(0.3),
-            backgroundColor: Theme.of(context).backgroundColor,
+            backgroundColor: Theme.of(context).colorScheme.background,
           ),
           reminderTitleText: Text(
             'Reminder Title',
@@ -41,8 +41,7 @@ class MyApp extends StatelessWidget {
             'Daily',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
-          timeNormalTextStyle:
-              const TextStyle(fontSize: 24, color: Colors.grey),
+          timeNormalTextStyle: const TextStyle(fontSize: 24, color: Colors.grey),
           timeSelectedTextStyle: TextStyle(
             fontSize: 24,
             color: Theme.of(context).primaryColor,

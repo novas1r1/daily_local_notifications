@@ -64,9 +64,8 @@ class DailyLocalNotificationWidget extends StatelessWidget {
                         CupertinoSwitch(
                           activeColor: activeColor,
                           value: provider.isReminderEnabled,
-                          onChanged: (bool isEnabled) =>
-                              provider.updateReminderEnabled(isEnabled),
-                        )
+                          onChanged: (bool isEnabled) => provider.updateReminderEnabled(isEnabled),
+                        ),
                       ],
                     )
                   else
@@ -76,8 +75,7 @@ class DailyLocalNotificationWidget extends StatelessWidget {
                       contentPadding: EdgeInsets.zero,
                       value: provider.isReminderEnabled,
                       title: reminderTitleText,
-                      onChanged: (bool isEnabled) =>
-                          provider.updateReminderEnabled(isEnabled),
+                      onChanged: (bool isEnabled) => provider.updateReminderEnabled(isEnabled),
                     ),
                   if (provider.isReminderEnabled)
                     Column(

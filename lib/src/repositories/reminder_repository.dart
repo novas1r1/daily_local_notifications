@@ -10,8 +10,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-const MethodChannel platform =
-    MethodChannel('verena-zaiser.de/daily_local_notifications');
+const MethodChannel platform = MethodChannel('verena-zaiser.de/daily_local_notifications');
 
 const String portName = 'notification_send_port';
 
@@ -30,8 +29,7 @@ class ReminderRepository {
 
     // app_icon needs to be a added as a drawable resource
     // to the Android head project
-    final initializationSettingsAndroid =
-        AndroidInitializationSettings(notificationConfig.iconName);
+    final initializationSettingsAndroid = AndroidInitializationSettings(notificationConfig.iconName);
 
     /// The DarwinInitializationSettings class provides default settings on how the notification be presented when it is triggered and the application is in the foreground on iOS/macOS. There are optional named parameters that can be modified to suit your application's purposes. Here, it is omitted and the default values for these named properties is set such that all presentation options (alert, sound, badge) are enabled.
     final initializationSettingsDarwin = DarwinInitializationSettings(
@@ -59,20 +57,20 @@ class ReminderRepository {
   Future<void> requestPermissions() async {
     if (Platform.isIOS) {
       await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
+          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
           ?.requestPermissions(
             alert: true,
             badge: true,
             sound: true,
           );
     } else {
-      final plugin =
-          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+      final plugin = flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
       if (plugin != null) {
-        await plugin.requestPermission();
+        await plugin.requestNotificationsPermission();
+        // deprecated
+        // await plugin.requestPermission();
       }
     }
   }
@@ -89,8 +87,7 @@ class ReminderRepository {
 
     await cancelAllNotifications();
 
-    final activeDays =
-        days.where((day) => day.isActive).map((day) => day.dayIndex).toList();
+    final activeDays = days.where((day) => day.isActive).map((day) => day.dayIndex).toList();
 
     if (activeDays.isNotEmpty) {
       log('NOTIFICATIONS::scheduleNotifications for: $timeOfDay, $activeDays');
@@ -108,9 +105,10 @@ class ReminderRepository {
               channelDescription: notificationConfig.channelDescription,
             ),
           ),
-          androidAllowWhileIdle: true,
-          uiLocalNotificationDateInterpretation:
-              UILocalNotificationDateInterpretation.absoluteTime,
+          // deprecated
+          // androidAllowWhileIdle: true,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
           matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
         );
       }
@@ -135,9 +133,9 @@ class ReminderRepository {
   /// the getNotificationAppLaunchDetails method when the app starts if you
   /// need to handle when a notification triggering the launch for an app
   /// e.g. change the home route of the app for deep-linking
-  Future<void> onDidReceiveNotificationResponse(
+  void onDidReceiveNotificationResponse(
     NotificationResponse notificationResponse,
-  ) async {
+  ) {
     final payload = notificationResponse.payload;
 
     if (notificationResponse.payload != null) {

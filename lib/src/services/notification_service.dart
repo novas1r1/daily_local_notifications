@@ -1,1 +1,3 @@
-class NotificationService {}
+class NotificationService {
+  const NotificationService();
+}
