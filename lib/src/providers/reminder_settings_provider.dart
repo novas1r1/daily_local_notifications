@@ -107,16 +107,21 @@ class ReminderSettingsProvider extends ChangeNotifier {
         'reminderDays: $reminderDays, '
         'reminderTime: $reminderTime');
 
-    await sharedPrefsRepository.setReminderDays(reminderDays);
-    await sharedPrefsRepository.setReminderTime(reminderTime);
-    await sharedPrefsRepository.setReminderEnabled(isReminderEnabled);
+    try {
+      await sharedPrefsRepository.setReminderDays(reminderDays);
+      await sharedPrefsRepository.setReminderTime(reminderTime);
+      await sharedPrefsRepository.setReminderEnabled(isReminderEnabled);
 
-    await reminderRepository.scheduleDailyNotificationByTimeAndDay(
-      reminderTime,
-      reminderDays,
-    );
+      // throws exact_alarms_not_permitted exception
+      await reminderRepository.scheduleDailyNotificationByTimeAndDay(
+        reminderTime,
+        reminderDays,
+      );
 
-    onNotificationsUpdated();
+      onNotificationsUpdated();
+    } catch (error) {
+      log('NOTIFICATIONS::scheduleNotifications ERROR', error: error);
+    }
   }
 
   Future<void> clearReminder() async {
