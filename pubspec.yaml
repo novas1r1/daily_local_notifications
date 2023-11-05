@@ -1,6 +1,6 @@
 name: daily_local_notifications
 description: A Flutter Widget for setting daily local notifications.
-version: 0.2.1+3
+version: 0.2.1+4
 publish_to: none
 
 environment:
