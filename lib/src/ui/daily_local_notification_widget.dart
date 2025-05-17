@@ -62,7 +62,7 @@ class DailyLocalNotificationWidget extends StatelessWidget {
                       children: [
                         reminderTitleText,
                         CupertinoSwitch(
-                          activeColor: activeColor,
+                          activeTrackColor: activeColor,
                           value: provider.isReminderEnabled,
                           onChanged: (bool isEnabled) => provider.updateReminderEnabled(isEnabled),
                         ),

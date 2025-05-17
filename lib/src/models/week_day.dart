@@ -18,8 +18,7 @@ class WeekDay {
     required this.dayIndex,
   });
 
-  factory WeekDay.fromJson(String source, String dayTranslation) =>
-      WeekDay.fromMap(
+  factory WeekDay.fromJson(String source, String dayTranslation) => WeekDay.fromMap(
         json.decode(source) as Map<String, dynamic>,
         dayTranslation,
       );

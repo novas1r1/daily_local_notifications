@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
           config: const DailyLocalNotificationsConfig(),
           stylingConfig: StylingConfig(
             activeColor: Theme.of(context).primaryColor,
-            inactiveColor: Theme.of(context).primaryColor.withOpacity(0.3),
-            backgroundColor: Theme.of(context).colorScheme.background,
+            inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+            backgroundColor: Theme.of(context).colorScheme.surface,
           ),
           reminderTitleText: Text(
             'Reminder Title',

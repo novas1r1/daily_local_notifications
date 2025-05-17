@@ -6,3 +6,4 @@ linter:
     public_member_api_docs: false
     constant_identifier_names: false
     avoid_positional_boolean_parameters: false
+    require_trailing_commas: true

@@ -1,25 +1,25 @@
 name: daily_local_notifications
 description: A Flutter Widget for setting daily local notifications.
-version: 0.3.0
+version: 0.4.0
 publish_to: none
 
 environment:
-  sdk: ">=3.1.0 <4.0.0"
-  flutter: 3.24.3
+  sdk: "^3.6.0"
+  flutter: 3.29.3
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^17.2.3
+  flutter_local_notifications: ^19.2.0
   flutter_time_picker_spinner:
     git: https://github.com/novas1r1/flutter_time_picker_spinner.git
-  flutter_timezone: ^3.0.1
-  provider: ^6.1.2
-  shared_preferences: ^2.3.2
-  timezone: ^0.9.4
+  flutter_timezone: ^4.1.0
+  provider: ^6.1.5
+  shared_preferences: ^2.5.3
+  timezone: ^0.10.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.4
-  very_good_analysis: ^6.0.0
+  very_good_analysis: ^7.0.0

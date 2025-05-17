@@ -38,7 +38,8 @@ class SharedPrefsRepository {
     return reminderTime ?? false;
   }
 
-  Future<void> setReminderEnabled(bool isEnabled) => sharedPrefs.setBool(SP_REMINDER_ENABLED_KEY, isEnabled);
+  Future<void> setReminderEnabled(bool isEnabled) =>
+      sharedPrefs.setBool(SP_REMINDER_ENABLED_KEY, isEnabled);
 
   List<WeekDay> getReminderDays(List<String> weekDayTranslations) {
     final reminderDaysString = sharedPrefs.getString(SP_REMINDER_WEEK_DAYS);
@@ -59,7 +60,9 @@ class SharedPrefsRepository {
 
       reminderDays = reminderDaysUpdated;
     } else {
-      reminderDays = WeekDay.initialWeekDaysFromTranslations(weekDayTranslations);
+      reminderDays = WeekDay.initialWeekDaysFromTranslations(
+        weekDayTranslations,
+      );
     }
 
     return reminderDays;

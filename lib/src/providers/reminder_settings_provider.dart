@@ -30,8 +30,7 @@ class ReminderSettingsProvider extends ChangeNotifier {
 
     reminderTime = sharedPrefsRepository.getReminderTime();
     isReminderEnabled = sharedPrefsRepository.isReminderEnabled();
-    reminderDays =
-        sharedPrefsRepository.getReminderDays(config.weekDayTranslations);
+    reminderDays = sharedPrefsRepository.getReminderDays(config.weekDayTranslations);
 
     checkIfDailyReminderChecked();
 
@@ -71,11 +70,9 @@ class ReminderSettingsProvider extends ChangeNotifier {
     isDailyReminderEnabled = isEnabled;
 
     if (isEnabled) {
-      reminderDays =
-          reminderDays.map((day) => day.copyWith(isActive: true)).toList();
+      reminderDays = reminderDays.map((day) => day.copyWith(isActive: true)).toList();
     } else {
-      reminderDays =
-          reminderDays.map((day) => day.copyWith(isActive: false)).toList();
+      reminderDays = reminderDays.map((day) => day.copyWith(isActive: false)).toList();
     }
 
     await scheduleNotifications();
@@ -126,8 +123,7 @@ class ReminderSettingsProvider extends ChangeNotifier {
 
   Future<void> clearReminder() async {
     log('NOTIFICATIONS::clearReminder');
-    reminderDays =
-        WeekDay.initialWeekDaysFromTranslations(config.weekDayTranslations);
+    reminderDays = WeekDay.initialWeekDaysFromTranslations(config.weekDayTranslations);
     isReminderEnabled = false;
     checkIfDailyReminderChecked();
 

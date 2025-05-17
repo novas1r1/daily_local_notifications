@@ -34,8 +34,7 @@ class DailyToggleButtons extends StatelessWidget {
                   activeColor: activeColor,
                   checkColor: Colors.white,
                   value: provider.isDailyReminderEnabled,
-                  onChanged: (isDaily) =>
-                      provider.updateDailyReminderEnabled(isDaily ?? false),
+                  onChanged: (isDaily) => provider.updateDailyReminderEnabled(isDaily ?? false),
                 ),
               ],
             ),
@@ -47,22 +46,19 @@ class DailyToggleButtons extends StatelessWidget {
                   provider.reminderDays.length,
                   (index) => Expanded(
                     child: GestureDetector(
-                      onTap: () =>
-                          provider.toggleDay(provider.reminderDays[index]),
+                      onTap: () => provider.toggleDay(provider.reminderDays[index]),
                       child: Padding(
                         padding: const EdgeInsets.only(right: 4),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: provider.reminderDays[index].isActive
-                                ? activeColor
-                                : inactiveColor,
+                            color:
+                                provider.reminderDays[index].isActive ? activeColor : inactiveColor,
                           ),
                           height: 45,
                           width: 45,
                           child: Center(
-                            child:
-                                Text(provider.reminderDays[index].firstLetter),
+                            child: Text(provider.reminderDays[index].firstLetter),
                           ),
                         ),
                       ),
